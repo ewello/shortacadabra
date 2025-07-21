@@ -1,0 +1,36 @@
+{% extends "ss/layout.html" %}
+{% block body %}
+<div class="row justify-content-center mb-4">
+    <div class="col-md-6">
+        <div class="card text-center mb-4">
+            <div class="card-body">
+                <h4 class="card-title mb-2">👋 Добро пожаловать, {{ user.username }}!</h4>
+                <p class="card-text">Всего ваших сокращённых ссылок: <span class="fw-bold text-primary">{{ total }}</span></p>
+                <a href="{% url 'shorten' %}" class="btn btn-success btn-lg mt-2">✂️ Создать новую ссылку</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Последние 5 ссылок</span>
+                <a href="{% url 'urls' %}" class="btn btn-outline-primary btn-sm">Все ссылки</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for url in recent %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="text-truncate" style="max-width: 60%;">
+                        <span class="text-muted">{{ url.url }}</span>
+                    </div>
+                    <a href="{% url 'url' url.id %}" class="btn btn-outline-secondary btn-sm">Подробнее</a>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-center text-muted">У вас пока нет сокращённых ссылок.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %} 

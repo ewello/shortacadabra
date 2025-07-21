@@ -1,0 +1,43 @@
+{% extends "ss/layout.html" %}
+{% block body %}
+{% if secure %}
+    <h2 class="bg-success"></h2>
+    <div class="alert alert-info" role="alert">
+        Этот сайт безопасен
+    </div>
+    <a href="{{url}}" class="btn btn-primary">продолжить</a>
+{% else %}
+    <div class="alert alert-danger" role="alert">
+        Этот сайт помечен как вредоносный
+    </div>
+    {% if shorten %}
+    <a href="{% url 'shorten' %}" class="btn btn-primary">сократить другой url</a>
+    {% else %}
+    <a href="{{url}}" class="btn btn-danger">продолжить</a>
+    {% endif %}
+{% endif %}
+<h3>отчет virus total</h3>
+<h3>исходный url : {{url}}</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">поставщик</th>
+            <th scope="col">категория</th>
+            <th scope="col">результат</th>
+            <th scope="col">метод</th>
+            <th scope="col">движок</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vendor, data in vendors.items %}
+        <tr>
+            <th scope="row">{{vendor}}</th>
+            {% for value in data.values %}
+            <td>{{value}}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

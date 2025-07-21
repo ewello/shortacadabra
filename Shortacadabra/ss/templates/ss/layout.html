@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shortacadabra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+            box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+        }
+        .navbar-brand, .navbar-nav .nav-link, .navbar-nav .dropdown-item {
+            color: #fff !important;
+            font-weight: 500;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+        .navbar-nav .nav-link.active {
+            text-decoration: underline;
+        }
+        .main-content {
+            padding: 32px 0 48px 0;
+        }
+        .card {
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(99,102,241,0.07);
+            border: none;
+        }
+        .btn-primary, .btn-success, .btn-info {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .footer {
+            background: #6366f1;
+            color: #fff;
+            padding: 24px 0 12px 0;
+            text-align: center;
+            margin-top: 48px;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            box-shadow: 0 -2px 12px rgba(99,102,241,0.08);
+        }
+        .footer a { color: #dbeafe; text-decoration: underline; }
+        .footer a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg mb-4">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16"><path d="M4.715 6.542a3 3 0 0 1 4.243 0l.543.543a.5.5 0 0 0 .708-.708l-.543-.543a4 4 0 1 0-5.657 5.657l1.414 1.414a4 4 0 0 0 5.657 0 .5.5 0 1 0-.708-.708 3 3 0 0 1-4.243 0l-1.414-1.414a3 3 0 0 1 0-4.243z"/><path d="M6.542 4.715a3 3 0 0 1 0 4.243.5.5 0 0 0 .708.708 4 4 0 1 0-5.657-5.657l1.414 1.414a4 4 0 0 0 5.657 0 .5.5 0 1 0-.708-.708 3 3 0 0 1-4.243 0l-1.414-1.414a3 3 0 0 1 0-4.243z"/></svg>
+                Shortacadabra
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'urls' %}active{% endif %}" href="{% url 'urls' %}">Мои ссылки</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'shorten' %}active{% endif %}" href="{% url 'shorten' %}">Сократить</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Аккаунт
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" style="color: #212529 !important;" href="{% url 'login' %}">Войти</a></li>
+                            <li><a class="dropdown-item" style="color: #212529 !important;" href="{% url 'register' %}">Зарегистрироваться</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container main-content">
+        {% block body %}{% endblock %}
+    </main>
+    <!-- Футер удалён по просьбе пользователя -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
