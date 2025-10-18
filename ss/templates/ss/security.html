@@ -1,0 +1,62 @@
+{% extends "ss/layout.html" %}
+{% block body %}
+{% if secure %}
+    <h2 class="bg-success"></h2>
+    <div class="alert alert-info" role="alert">
+        Этот сайт безопасен
+    </div>
+    <a href="{{url}}" class="btn btn-primary">продолжить</a>
+{% else %}
+    <div class="alert alert-danger" role="alert">
+        Этот сайт помечен как вредоносный
+    </div>
+    {% if shorten %}
+    <a href="{% url 'shorten' %}" class="btn btn-primary">сократить другой url</a>
+    {% else %}
+    <a href="{{url}}" class="btn btn-danger">продолжить</a>
+    {% endif %}
+{% endif %}
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="card mb-3">
+            <div class="card-header">Исходный URL</div>
+            <div class="card-body">
+                <div class="text-break">{{ url }}</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Отчет VirusTotal</div>
+            <div class="card-body">
+{% if vendors.error %}
+                <div class="alert alert-danger" role="alert">Ошибка отчета: {{ vendors.error }}</div>
+{% else %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">поставщик</th>
+                            <th scope="col">категория</th>
+                            <th scope="col">результат</th>
+                            <th scope="col">метод</th>
+                            <th scope="col">движок</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vendor, data in vendors.items %}
+                        <tr>
+                            <td>{{ vendor }}</td>
+                            <td>{{ data.category|default:"-" }}</td>
+                            <td>{{ data.result|default:"-" }}</td>
+                            <td>{{ data.method|default:"-" }}</td>
+                            <td>{{ data.engine_name|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

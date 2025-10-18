@@ -1,0 +1,42 @@
+{% extends "ss/layout.html" %}
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="card mb-3">
+            <div class="card-header">URL</div>
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+                    <div class="text-break">{{ url }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">Custom Domain</div>
+            <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+                    {% if custom_domain %}
+                        <div class="text-break">{{ custom_domain.domain }}</div>
+                    {% else %}
+                        <div class="text-break">{{ request.META.HTTP_HOST }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Short URL</div>
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    {% if custom_domain %}
+                        <a class="text-decoration-none" href="{% url 'redirect' short %}">https://{{ custom_domain.domain }}/{{short}}</a>
+                    {% else %}
+                        <a class="text-decoration-none" href="{% url 'redirect' short %}">{{ request.META.HTTP_HOST }}/{{short}}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "ss/layout.html" %}
+{% block body %}
+<div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Аналитика для ссылки</span>
+                <a href="{% url 'url' url.id %}" class="btn btn-outline-primary btn-sm">Назад к ссылке</a>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>URL:</strong> 
+                        <div class="text-break">{{ url.url }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Всего кликов:</strong> {{ total_clicks }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <strong>Сокращенная ссылка:</strong>
+                        <div class="text-break"><a href="{{ short_url }}" target="_blank">{{ short_url }}</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Статистика по странам -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Топ стран</div>
+            <div class="card-body">
+                {% if country_stats %}
+                    {% for stat in country_stats %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>{{ stat.country|default:"Неизвестно" }}</span>
+                        <span class="badge bg-primary rounded-pill">{{ stat.count }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">Нет данных</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика по браузерам -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Топ браузеров</div>
+            <div class="card-body">
+                {% if browser_stats %}
+                    {% for stat in browser_stats %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>{{ stat.browser|default:"Неизвестно" }}</span>
+                        <span class="badge bg-primary rounded-pill">{{ stat.count }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">Нет данных</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Статистика по устройствам -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Типы устройств</div>
+            <div class="card-body">
+                {% if device_stats %}
+                    {% for stat in device_stats %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>{{ stat.device_type|default:"Неизвестно" }}</span>
+                        <span class="badge bg-primary rounded-pill">{{ stat.count }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">Нет данных</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- График кликов по дням -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Клики за последние 30 дней</div>
+            <div class="card-body">
+                <canvas id="clicksChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Детальная таблица кликов -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">Последние клики</div>
+            <div class="card-body">
+                {% if clicks %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Дата/Время</th>
+                                <th>Страна</th>
+                                <th>Город</th>
+                                <th>Браузер</th>
+                                <th>Устройство</th>
+                                <th>IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for click in clicks %}
+                            <tr>
+                                <td>{{ click.created_at|date:"d.m.Y H:i" }}</td>
+                                <td>{{ click.country|default:"-" }}</td>
+                                <td>{{ click.city|default:"-" }}</td>
+                                <td>{{ click.browser|default:"-" }}</td>
+                                <td>{{ click.device_type|default:"-" }}</td>
+                                <td>{{ click.ip_address|default:"-" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <p class="text-muted">Нет кликов</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// График кликов по дням
+const ctx = document.getElementById('clicksChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ day_labels|safe }},
+        datasets: [{
+            label: 'Клики',
+            data: {{ day_counts|safe }},
+            borderColor: '#f0f0f0',
+            backgroundColor: 'rgba(240, 240, 240, 0.1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#f0f0f0'
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: '#f0f0f0'
+                },
+                grid: {
+                    color: 'rgba(240, 240, 240, 0.1)'
+                }
+            },
+            y: {
+                ticks: {
+                    color: '#f0f0f0'
+                },
+                grid: {
+                    color: 'rgba(240, 240, 240, 0.1)'
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

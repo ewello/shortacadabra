@@ -1,0 +1,21 @@
+{% extends "ss/layout.html" %}
+{% load crispy_forms_tags %}
+{% block body %}
+<div class="container d-flex justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+        <form method="post" action="" >
+            {% csrf_token %}
+            {{form|crispy}}
+            <div class="form-text" style="color: var(--accent-offwhite) !important; opacity: .8;">
+                Если ничего не выбирать — будет использован стандартный домен.
+            </div>
+            <button type="submit" class="btn btn-primary mb-3">Сократить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

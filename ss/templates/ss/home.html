@@ -1,0 +1,69 @@
+{% extends "ss/layout.html" %}
+{% block body %}
+<div class="position-relative mb-4" style="height: 180px; border-radius: 12px; overflow: hidden; background: transparent;">
+    <div id="ts-container" class="w-100 h-100"></div>
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three-spritetext@1.8.1/dist/three-spritetext.min.js"></script>
+    <script>
+    (function() {
+        const container = document.getElementById('ts-container');
+        if (!container || !window.THREE || !window.SpriteText) return;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio || 1);
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+
+        const text = new SpriteText('Shortacadabra');
+        text.color = '#d6d6d6';
+        text.backgroundColor = 'rgba(0,0,0,0.0)';
+        text.borderWidth = 0;
+        text.textHeight = 8; // thinner
+        text.padding = 2;
+        scene.add(text);
+
+        const light = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(light);
+        
+        // No point light to keep it flat and minimal
+
+        camera.position.z = 30;
+
+        let t = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            // Static, minimal label
+            t += 0.0;
+            text.rotation = 0;
+            text.position.set(0, 0, 0);
+            
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        function onResize() {
+            const w = container.clientWidth || 600;
+            const h = container.clientHeight || 200;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+        window.addEventListener('resize', onResize);
+    })();
+    </script>
+</div>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Почему нужно использовать короткие и безопасные url??</h5>
+        <h6 class="card-subtitle mb-2 text-muted">статья CMU</h6>
+        <p class="card-text">Shortened URLs, such as those from bit.ly and goo.gl make it easy to type in a web address
+            quickly, but difficult to determine where the web browser will actually take you. Criminals will use
+            shortened URLs to direct victims to phishing sites or initiate a download of malicious software on to your
+            device. </p>
+        <a href="https://www.cmu.edu/iso/aware/dont-take-the-bait/shortened-url-security.html#:~:text=Shortened%20URLs%2C%20such%20as%20those,software%20on%20to%20your%20device." class="card-link">читать полную статью</a>
+    </div>
+
+</div>
+{% endblock %}

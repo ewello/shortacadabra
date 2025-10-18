@@ -1,0 +1,12 @@
+{% extends "ss/layout.html" %}
+{% load crispy_forms_tags %}
+{% block body %}
+<div class="container d-flex justify-content-center">
+<form method="post" action="{% url 'register' %}">
+{% csrf_token %}
+{{form|crispy}}
+<input type="text" name="hp" value="" style="display:none" tabindex="-1" autocomplete="off" />
+<button type="submit" class="btn btn-primary mb-3">Создать аккаунт</button>
+</form>
+</div>
+{% endblock %}

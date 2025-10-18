@@ -1,0 +1,35 @@
+# Core Django Framework
+Django==4.0.5
+
+# Environment Configuration
+python-decouple==3.7
+
+# HTTP Requests and External APIs
+requests==2.31.0
+
+# Database Drivers
+psycopg2-binary==2.9.9
+
+# Form Handling and UI
+django-crispy-forms==1.14.0
+crispy-bootstrap5==0.7
+
+# Security and Rate Limiting
+django-ratelimit==3.0.1
+django-axes==6.5.0
+django-csp==3.7
+django-cors-headers==4.4.0
+
+# User Agent Parsing for Analytics
+user-agents==2.2.0
+
+# Production Server
+gunicorn==20.1.0
+
+# Development Dependencies (optional)
+django-debug-toolbar==4.1.0
+django-extensions==3.2.1
+
+# Additional Security (optional)
+django-ratelimit==3.0.1
+django-axes==6.5.0
